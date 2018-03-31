@@ -28,7 +28,71 @@ Genealogy::Relationship - calculate the relationship between two people
 
 =head1 DESCRIPTION
 
+This module makes it easto calculate the relationship between two people.
 
+If you have a set of objects modelling your family tree, then you will
+be able to use this module to get a description of the relationship between
+any two people on that tree.
+
+The objects that you use with this module need to implement three methods:
+
+=over 4
+
+=item * parent
+
+This method should return the object which is the parent of the current
+person.
+
+=item * id
+
+This method should return a unique identifier for the current person.
+The identifier should be a number.
+
+=item * gender
+
+This method should return the gender of the current person. It should be
+the character 'm' or 'f'.
+
+=back
+
+=head2 Limitations
+
+This module was born out of a need I had while creating
+L<https://lineofsuccession.co.uk/>. This leads to a couple of limitations
+that I hope to remove at a later date.
+
+=over 4
+
+=item 1
+
+Each person in the tree is expected to have only one parent. This is, of
+course, about half of the usual number. It's like that because for the line
+of succession I'm tracing bloodlines and only one parent is ever going to
+be significant.
+
+I realise that this is a significant limitation and I'll be thinking about
+how to fix it as soon as possible.
+
+=item 2
+
+The table that I use to generate the relationship names only goes back four
+generations - that's to third cousins (people who share great, great
+grandparents with each other).
+
+This has, so far, been enough for my purposes, but I realise that more
+coverage would be useful. I should probably move away from a table-based
+approach and find a way to calculate the relationship names.
+
+=back
+
+=head2 Caching
+
+Calculating relationship names isn't at all different. But there can be a lot
+of (simple and repetitive) work involved. This is particularly true if your
+objects are based on database tables (as I found to my expense).
+
+If you're calculating a lot of relationships, then you should probably
+consider putting a caching layer in front of C<get_relationship>.
 
 =cut
 
@@ -82,6 +146,17 @@ sub _build_relationship_table {
   }
 }
 
+=head1 Methods
+
+The following methods are defined.
+
+=head2 most_recent_common_ancestor
+
+Given two person objects, returns the person who is the most recent common
+ancestor for the given people.
+
+=cut
+
 sub most_recent_common_ancestor {
   my $self = shift;
   my ($person1, $person2) = @_;
@@ -101,6 +176,16 @@ sub most_recent_common_ancestor {
   die "Can't find a common ancestor.\n";
 }
 
+=head2 get_ancestors
+
+Given a person object, returns a list of person objects, one for each
+ancestor of the given person.
+
+The first person in the list will be the person's parent and the last person
+will be their most distant ancestor.
+
+=cut
+
 sub get_ancestors {
   my $self = shift;
   my ($person) = @_;
@@ -114,6 +199,13 @@ sub get_ancestors {
   return @ancestors;
 }
 
+=head2 get_relationship
+
+Given two person objects, returns a string containing a description of the
+relationship between those two people.
+
+=cut
+
 sub get_relationship {
   my $self = shift;
   my ($person1, $person2) = @_;
@@ -122,6 +214,18 @@ sub get_relationship {
 
   return $self->relationship_table->{$person1->gender}[$x][$y];
 }
+
+=head2 get_relationship_coords
+
+Given two person objects, returns the "co-ordinates" of the relationship
+between them.
+
+The relationship co-ordinates are a pair of integers. The first integer is
+the number of generations between the first person and their most recent
+common ancestor. The second integer is the number of generations between
+the second person and their most recent common ancestor.
+
+=cut
 
 sub get_relationship_coords {
   my $self = shift;
@@ -141,5 +245,22 @@ sub get_relationship_coords {
 
   die "Can't work out the relationship.\n";
 }
+
+=head1 AUTHOR
+
+Dave Cross <dave@perlhacks.com>
+
+=head1 SEE ALSO
+
+perl(1)
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2018, Magnum Solutions Ltd.  All Rights Reserved.
+
+This script is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
 
 1;
