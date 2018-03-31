@@ -145,7 +145,7 @@ sub _build_relationship_table {
     ['Great granddaughter', 'Great niece', 'First cousin once removed', 'Second cousin', 'Second cousin once removed'],
     ['Great, great granddaughter', 'Great, great niece', 'First cousin twice removed', 'Second cousin once removed', 'Third cousin',],
     ],
-  }
+  };
 }
 
 =head1 Methods
