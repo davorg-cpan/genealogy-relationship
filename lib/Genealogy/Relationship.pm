@@ -75,9 +75,9 @@ how to fix it as soon as possible.
 
 =item 2
 
-The table that I use to generate the relationship names only goes back four
-generations - that's to third cousins (people who share great, great
-grandparents with each other).
+The table that I use to generate the relationship names only goes back five
+generations - that's to fourth cousins (people who share great, great,
+great grandparents with each other).
 
 This has, so far, been enough for my purposes, but I realise that more
 coverage would be useful. I should probably move away from a table-based
