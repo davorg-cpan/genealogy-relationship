@@ -1,3 +1,5 @@
+use compat::perl7;
+
 =head1 NAME
 
 Genealogy::Relationship - calculate the relationship between two people
