@@ -63,6 +63,11 @@ ok($mrca = $rel->most_recent_common_ancestor($father, $son),
 is($mrca->name, 'Father',
   'Got the right most recent common ancestor between father and son');
 
+ok($mrca = $rel->most_recent_common_ancestor($grandfather, $grandfather),
+   'Got a most recent common ancestor between grandfather and grandfather');
+is($mrca->name, 'Grandfather',
+  'A person themself can be their own most recent common ancestor');
+
 is_deeply([$rel->get_relationship_coords($son, $son)], [0, 0],
   'Got right relationship coords between son and himself');
 is_deeply([$rel->get_relationship_coords($son, $grandfather)], [2, 0],
