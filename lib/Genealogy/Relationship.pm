@@ -260,7 +260,7 @@ perl(1)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2018, Magnum Solutions Ltd.  All Rights Reserved.
+Copyright (C) 2018-2020, Magnum Solutions Ltd.  All Rights Reserved.
 
 This script is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
