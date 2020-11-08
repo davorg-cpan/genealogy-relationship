@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Exception;
 use FindBin '$Bin';
 use Genealogy::Relationship;
 use lib "$Bin/lib";
@@ -36,6 +37,11 @@ my $cousin = TestPerson->new(
   parent => $uncle,
   gender => 'f',
 );
+my $unrelated_woman = TestPerson->new(
+  id     => 6,
+  name   => 'Unrelated woman',
+  gender => 'f',
+);
 
 my $rel = Genealogy::Relationship->new;
 
@@ -67,6 +73,11 @@ ok($mrca = $rel->most_recent_common_ancestor($grandfather, $grandfather),
    'Got a most recent common ancestor between grandfather and grandfather');
 is($mrca->name, 'Grandfather',
   'A person themself can be their own most recent common ancestor');
+
+throws_ok {
+  $rel->most_recent_common_ancestor( $son, $unrelated_woman )
+} qr/Can't find a common ancestor/,
+  'Unrelated people do not have a common ancestor';
 
 is_deeply([$rel->get_relationship_coords($son, $son)], [0, 0],
   'Got right relationship coords between son and himself');
