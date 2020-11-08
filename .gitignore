@@ -1,6 +1,8 @@
 Genealogy-Relationship-*.tar.gz
 MYMETA.json
+MYMETA.json.lock
 MYMETA.yml
 Makefile
 blib/
+cover_db/
 pm_to_blib
