@@ -90,6 +90,11 @@ is_deeply([$rel->get_relationship_coords($son, $cousin)], [2, 2],
 is_deeply([$rel->get_relationship_coords($son, $cousin)], [2, 2],
   'Got right relationship coords between cousin and son');
 
+throws_ok {
+  $rel->get_relationship_coords( $son, $unrelated_woman )
+} qr/Can't work out the relationship/,
+  'Unrelated people do not have relationship coordinates';
+
 is($rel->get_relationship($son, $grandfather), 'Grandson',
   'Son is the grandson of the grandfather');
 is($rel->get_relationship($cousin, $grandfather), 'Granddaughter',
