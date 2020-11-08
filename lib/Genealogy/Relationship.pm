@@ -28,7 +28,7 @@ Genealogy::Relationship - calculate the relationship between two people
 
 =head1 DESCRIPTION
 
-This module makes it easto calculate the relationship between two people.
+This module makes it easy to calculate the relationship between two people.
 
 If you have a set of objects modelling your family tree, then you will
 be able to use this module to get a description of the relationship between
