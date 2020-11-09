@@ -29,3 +29,4 @@ jobs:
       - run: perl -V
       - run: cpanm --installdeps .
       - run: prove -lv t
+
