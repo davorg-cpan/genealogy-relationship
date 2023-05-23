@@ -58,12 +58,12 @@ the character 'm' or 'f'.
 =head2 Limitations
 
 This module was born out of a need I had while creating
-L<https://lineofsuccession.co.uk/>. This leads to a couple of limitations
+L<https://lineofsuccession.co.uk/>. This leads to a limitation
 that I hope to remove at a later date.
 
 =over 4
 
-=item 1
+=item *
 
 Each person in the tree is expected to have only one parent. This is, of
 course, about half of the usual number. It's like that because for the line
@@ -72,18 +72,6 @@ be significant.
 
 I realise that this is a significant limitation and I'll be thinking about
 how to fix it as soon as possible.
-
-=item 2
-
-The table that I use to generate the relationship names only goes back five
-generations - that's to fourth cousins (people who share great, great,
-great grandparents with each other).
-
-This has, so far, been enough for my purposes, but I realise that more
-coverage would be useful. I should probably move away from a table-based
-approach and find a way to calculate the relationship names.
-
-=back
 
 =head2 Caching
 
@@ -102,6 +90,7 @@ use Moo;
 use Types::Standard qw[Str HashRef];
 use List::Util qw[first];
 use List::MoreUtils qw[firstidx];
+use Lingua::EN::Numbers qw[num2en num2en_ordinal];
 
 our $VERSION = '0.0.5';
 
@@ -135,7 +124,7 @@ sub _build_relationship_table {
     [ undef, 'Father', 'Grandfather', 'Great grandfather', 'Great, great grandfather', 'Great, great, great grandfather' ],
     ['Son', 'Brother', 'Uncle', 'Great uncle', 'Great, great uncle', 'Great, great, great uncle' ],
     ['Grandson', 'Nephew', 'First cousin', 'First cousin once removed', 'First cousin twice removed', 'First cousin three times removed' ],
-    ['Great grandson', 'Great nephew', 'First cousin once removed', 'Second cousin', 'Second cousin once removed', 'Seconc cousin twice removed' ],
+    ['Great grandson', 'Great nephew', 'First cousin once removed', 'Second cousin', 'Second cousin once removed', 'Second cousin twice removed' ],
     ['Great, great grandson', 'Great, great nephew', 'First cousin twice removed', 'Second cousin once removed', 'Third cousin', 'Third cousin once removed' ],
     ['Great, great, great grandson', 'Great, great, great nephew', 'First cousin three times removed', 'Second cousin twice removed', 'Third cousin once removed', 'Fourth cousin' ],
     ],
@@ -216,7 +205,84 @@ sub get_relationship {
 
   my ($x, $y) = $self->get_relationship_coords($person1, $person2);
 
-  return $self->relationship_table->{$person1->gender}[$x][$y];
+  if (defined $self->relationship_table->{$person1->gender}[$x][$y]) {
+    return $self->relationship_table->{$person1->gender}[$x][$y];
+  } else {
+    return $self->relationship_table->{$person1->gender}[$x][$y] =
+      ucfirst $self->make_rel($person1->gender, $x, $y);
+  }
+}
+
+=head2 make_rel
+
+Given relationship co-ords and a gender, this will synthesise a relationship
+description. This only works because we've hard-coded an initial relationship
+table that covers all of the trickier situations.
+
+=cut
+
+sub make_rel {
+  my $self = shift;
+  my ($gender, $x, $y) = @_;
+
+  my %terms = (
+    m => {
+      child => 'son',
+      parent => 'father',
+      parent_sibling => 'uncle',
+      parent_sibling_child => 'nephew',
+    },
+    f => {
+      child => 'daughter',
+      parent => 'mother',
+      parent_sibling => 'aunt',
+      parent_sibling_child => 'niece',
+    },
+  );
+
+  if ($x == $y) {
+    return num2en_ordinal($x - 1) . ' cousin';
+  }
+
+  if ($x == 0) {
+    return join(', ', ('great') x ($y - 2)) . ' grand' . $terms{$gender}{parent};
+  }
+
+  if ($x == 1) {
+    return join(', ', ('great') x ($y - 2)) . ' ' . $terms{$gender}{parent_sibling};
+  }
+
+  if ($y == 0) {
+    return join(', ', ('great') x ($x - 2)) . ' grand' . $terms{$gender}{child};
+  }
+
+  if ($y == 1) {
+    return join(', ', ('great') x ($x - 2)) . ' ' . $terms{$gender}{parent_sibling_child};
+  }
+
+  if ($x > $y) {
+    return num2en_ordinal($y - 1) . ' cousin ' . times_str($x - $y) . ' removed';
+  } else {
+    return num2en_ordinal($x - 1) . ' cousin ' . times_str($y - $x) . ' removed';
+  }
+
+  return 'working on it';
+}
+
+=head2 times_str
+
+Given an integer, this method returns a string version for use in a
+"removed" cousin relationship, i.e. "once", "twice", "three times", etc.
+
+=cut
+
+sub times_str {
+  my ($num) = @_;
+
+  return 'once'  if $num == 1;
+  return 'twice' if $num == 2;
+
+  return num2en($num) . ' times';
 }
 
 =head2 get_relationship_coords
@@ -260,7 +326,7 @@ perl(1)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2018-2020, Magnum Solutions Ltd.  All Rights Reserved.
+Copyright (C) 2018-2023, Magnum Solutions Ltd.  All Rights Reserved.
 
 This script is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
