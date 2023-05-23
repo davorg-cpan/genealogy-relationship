@@ -92,7 +92,7 @@ use List::Util qw[first];
 use List::MoreUtils qw[firstidx];
 use Lingua::EN::Numbers qw[num2en num2en_ordinal];
 
-our $VERSION = '0.0.5';
+our $VERSION = '0.1.0';
 
 has parent_field_name => (
   is => 'ro',

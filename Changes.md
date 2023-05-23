@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.1.0] - 2023-05-23
+
+## Added
+
+- We now support arbitrarily distant relationships (by synthesising descriptions)
+
 ## [0.0.5] - 2021-01-12
 
 ### Added
