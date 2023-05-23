@@ -1,5 +1,17 @@
 # Change Log
 
+## [Unreleased]
+
+### Fixed
+
+- Pod error
+
+## [0.1.2] - 2023-05-23
+
+### Fixed
+
+- Fixed the previous fix
+
 ## [0.1.1] - 2023-05-23
 
 ### Fixed

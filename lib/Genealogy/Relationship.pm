@@ -73,6 +73,8 @@ be significant.
 I realise that this is a significant limitation and I'll be thinking about
 how to fix it as soon as possible.
 
+=back
+
 =head2 Caching
 
 Calculating relationship names isn't at all different. But there can be a lot
@@ -92,7 +94,7 @@ use List::Util qw[first];
 use List::MoreUtils qw[firstidx];
 use Lingua::EN::Numbers qw[num2en num2en_ordinal];
 
-our $VERSION = '0.1.1';
+our $VERSION = '0.1.2';
 
 has parent_field_name => (
   is => 'ro',
