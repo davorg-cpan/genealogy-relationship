@@ -1,8 +1,14 @@
 # Change Log
 
+## [0.1.1] - 2023-05-23
+
+### Fixed
+
+- Missing pre-req module (CI is great - but you have to actually use it!)
+
 ## [0.1.0] - 2023-05-23
 
-## Added
+### Added
 
 - We now support arbitrarily distant relationships (by synthesising descriptions)
 
