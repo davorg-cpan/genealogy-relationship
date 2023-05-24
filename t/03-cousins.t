@@ -22,12 +22,12 @@ my @expected = (
   [ 'First cousin',   'Uncle' ],
   [ 'Second cousin',  'Great uncle' ],
   [ 'Third cousin',   'Great, great uncle' ],
-  [ 'Fourth cousin',  'Great, great, great uncle' ],
-  [ 'Fifth cousin',   'Great, great, great, great uncle' ],
-  [ 'Sixth cousin',   'Great, great, great, great, great uncle' ],
-  [ 'Seventh cousin', 'Great, great, great, great, great, great uncle' ],
-  [ 'Eighth cousin',  'Great, great, great, great, great, great, great uncle' ],
-  [ 'Ninth cousin',   'Great, great, great, great, great, great, great, great uncle' ],
+  [ 'Fourth cousin',  '3 x great uncle' ],
+  [ 'Fifth cousin',   '4 x great uncle' ],
+  [ 'Sixth cousin',   '5 x great uncle' ],
+  [ 'Seventh cousin', '6 x great uncle' ],
+  [ 'Eighth cousin',  '7 x great uncle' ],
+  [ 'Ninth cousin',   '8 x great uncle' ],
 );
 
 for my $g (1 .. 10) {
@@ -73,4 +73,19 @@ is($rel->get_relationship($generations[9][0], $generations[9][1]),
 is($rel->get_relationship($generations[8][0], $generations[5][1]),
    'Fourth cousin three times removed');
 
+can_ok($rel, 'abbr');
+
+# Test a higher number for abbr
+$rel = Genealogy::Relationship->new(abbr => 4);
+is($rel->get_relationship($generations[1][0], $generations[5][1]), 'Great, great, great uncle');
+is($rel->get_relationship($generations[1][0], $generations[6][1]), '4 x great uncle');
+
+# Turn off abbr
+$rel = Genealogy::Relationship->new(abbr => 0);
+is($rel->get_relationship($generations[1][0], $generations[3][1]), 'Great uncle');
+is($rel->get_relationship($generations[1][0], $generations[4][1]), 'Great, great uncle');
+is($rel->get_relationship($generations[1][0], $generations[5][1]), 'Great, great, great uncle');
+
+
 done_testing;
+
