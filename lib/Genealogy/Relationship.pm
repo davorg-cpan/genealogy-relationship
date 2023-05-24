@@ -75,6 +75,18 @@ how to fix it as soon as possible.
 
 =back
 
+=head2 Constructor
+
+The constructor for this class takes one optional attribute called `abbr`.
+The default value for this attribute is 2. When set, strings of repeated
+"great"s in a relationship description will collapsed to "$n x great".
+
+For example, if the description you have is "Great, great, great
+grandfather", then that will be abbreviated to to "3 x great grandfather".
+
+The value for `abbr` is the maximum number of repetitions that will be left
+untouched. You can turn abbreviations off by setting `abbr` to zero.
+
 =head2 Caching
 
 Calculating relationship names isn't at all different. But there can be a lot
@@ -89,7 +101,7 @@ consider putting a caching layer in front of C<get_relationship>.
 package Genealogy::Relationship;
 
 use Moo;
-use Types::Standard qw[Str HashRef];
+use Types::Standard qw[Int Str HashRef];
 use List::Util qw[first];
 use List::MoreUtils qw[firstidx];
 use Lingua::EN::Numbers qw[num2en num2en_ordinal];
@@ -140,6 +152,12 @@ sub _build_relationship_table {
     ],
   };
 }
+
+has abbr => (
+  is => 'ro',
+  isa => Int,
+  default => 3,
+);
 
 =head1 Methods
 
@@ -207,12 +225,40 @@ sub get_relationship {
 
   my ($x, $y) = $self->get_relationship_coords($person1, $person2);
 
+  my $rel;
+
   if (defined $self->relationship_table->{$person1->gender}[$x][$y]) {
-    return $self->relationship_table->{$person1->gender}[$x][$y];
+    $rel = $self->relationship_table->{$person1->gender}[$x][$y];
   } else {
-    return $self->relationship_table->{$person1->gender}[$x][$y] =
+    $rel = $self->relationship_table->{$person1->gender}[$x][$y] =
       ucfirst $self->make_rel($person1->gender, $x, $y);
   }
+
+  $rel = $self->abbr_rel($rel) if $self->abbr;
+
+  return $rel;
+}
+
+=head2 abbr_rel
+
+Optionally abbreviate a relationship description.
+
+=cut
+
+sub abbr_rel {
+  my $self = shift;
+  my ($rel) = @_;
+
+  return $rel unless $self->abbr;
+
+  my @greats = $rel =~ /(great)/gi;
+  my $count  = @greats;
+
+  return $rel if $count < $self->abbr;
+
+  $rel =~ s/(great,\s+)+/$count x /i;
+
+  return $rel;
 }
 
 =head2 make_rel

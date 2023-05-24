@@ -7,6 +7,7 @@
 - Pod error
 - IDs no longer need to be numbers
 - Added `get_relationship_ancestors()` method
+- Added `abbr` attribute
 
 ## [0.1.2] - 2023-05-23
 
