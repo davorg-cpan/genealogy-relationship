@@ -46,7 +46,7 @@ person.
 =item * id
 
 This method should return a unique identifier for the current person.
-The identifier should be a number.
+The identifier can be a string or a number.
 
 =item * gender
 
@@ -157,14 +157,14 @@ sub most_recent_common_ancestor {
   my ($person1, $person2) = @_;
 
   # Are they the same person?
-  return $person1 if $person1->id == $person2->id;
+  return $person1 if $person1->id eq $person2->id;
 
   my @ancestors1 = ($person1, $self->get_ancestors($person1));
   my @ancestors2 = ($person2, $self->get_ancestors($person2));
 
   for my $anc1 (@ancestors1) {
     for my $anc2 (@ancestors2) {
-      return $anc1 if $anc1->id == $anc2->id;
+      return $anc1 if $anc1->id eq $anc2->id;
     }
   }
 
@@ -304,14 +304,14 @@ sub get_relationship_coords {
   my ($person1, $person2) = @_;
 
   # If the two people are the same person, then return (0, 0).
-  return (0, 0) if $person1->id == $person2->id;
+  return (0, 0) if $person1->id eq $person2->id;
 
   my @ancestors1 = ($person1, $self->get_ancestors($person1));
   my @ancestors2 = ($person2, $self->get_ancestors($person2));
 
   for my $i (0 .. $#ancestors1) {
     for my $j (0 .. $#ancestors2) {
-      return ($i, $j) if $ancestors1[$i]->id == $ancestors2[$j]->id;
+      return ($i, $j) if $ancestors1[$i]->id eq $ancestors2[$j]->id;
     }
   }
 
