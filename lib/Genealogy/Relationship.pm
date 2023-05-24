@@ -318,6 +318,40 @@ sub get_relationship_coords {
   die "Can't work out the relationship.\n";
 }
 
+=head2 get_relationship_ancestors
+
+Given two people, returns lists of people linking those two people
+to their most recent common ancestor.
+
+The return value is a reference to an array containing two array
+references. The first references array contains the person1 and
+all their ancestors up to an including the most recent common
+ancestor. The second list does the same for person2.
+
+=cut
+
+sub get_relationship_ancestors {
+  my $self = shift;
+  my ($person1, $person2) = @_;
+
+  my $mrca = $self->most_recent_common_ancestor($person1, $person2)
+    or die "There is no most recent common ancestor\n";
+
+  my (@ancestors1, @ancestors2);
+
+  for ($person1, $self->get_ancestors($person1)) {
+    push @ancestors1, $_;
+    last if $_->id eq $mrca->id;
+  }
+
+  for ($person2, $self->get_ancestors($person2)) {
+    push @ancestors2, $_;
+    last if $_->id eq $mrca->id;
+  }
+
+  return [ \@ancestors1, \@ancestors2 ];
+}
+
 =head1 AUTHOR
 
 Dave Cross <dave@perlhacks.com>

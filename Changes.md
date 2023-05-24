@@ -6,6 +6,7 @@
 
 - Pod error
 - IDs no longer need to be numbers
+- Added `get_relationship_ancestors()` method
 
 ## [0.1.2] - 2023-05-23
 
