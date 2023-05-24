@@ -9,36 +9,36 @@ use lib "$Bin/lib";
 use TestPerson;
 
 my $grandfather = TestPerson->new(
-  id     => 1,
+  id     => 'p1',
   name   => 'Grandfather',
   gender => 'm',
 );
 my $father = TestPerson->new(
-  id     => 2,
+  id     => 'p2',
   name   => 'Father',
   parent => $grandfather,
   gender => 'm',
   );
 my $son = TestPerson->new(
-  id     => 3,
+  id     => 'p3',
   name   => 'Son',
   parent => $father,
   gender => 'm',
 );
 my $uncle = TestPerson->new(
-  id     => 4,
+  id     => 'p4',
   name   => 'Uncle',
   parent => $grandfather,
   gender => 'm',
 );
 my $cousin = TestPerson->new(
-  id     => 5,
+  id     => 'p5',
   name   => 'Cousin',
   parent => $uncle,
   gender => 'f',
 );
 my $unrelated_woman = TestPerson->new(
-  id     => 6,
+  id     => 'p6',
   name   => 'Unrelated woman',
   gender => 'f',
 );
