@@ -1,11 +1,14 @@
 # Change Log
 
-## [Unreleased]
+## [0.2.0 - 2023-05-24]
 
 ### Fixed
 
 - Pod error
 - IDs no longer need to be numbers
+
+### Added
+
 - Added `get_relationship_ancestors()` method
 - Added `abbr` attribute
 
