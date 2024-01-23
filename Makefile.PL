@@ -23,11 +23,11 @@ WriteMakefile(
         resources => {
             repository => {
                 type => 'git',
-                url => 'git://github.com/davorg/genealogy-relationship.git',
-                web => 'https://github.com/davorg/genealogy-relationship',
+                url => 'git://github.com/davorg-cpan/genealogy-relationship.git',
+                web => 'https://github.com/davorg-cpan/genealogy-relationship',
             },
             bugtracker => {
-                web => 'https://github.com/davorg/genealogy-relationship/issues',
+                web => 'https://github.com/davorg-cpan/genealogy-relationship/issues',
             },
         },
 
