@@ -55,6 +55,19 @@ the character 'm' or 'f'.
 
 =back
 
+=head2 Note
+
+THe objects that you use with this class can actually have different names
+for these methods. C<parent>, C<id> and C<gender> are the default names
+used by this module, but you can change them by passing the correct names
+to the constructor. For example:
+
+    my $rel = Genealogy::Relationship->new(
+      parent_field_name     => 'progenitor',
+      identifier_field_name => 'person_id',
+      gender_field_name     => 'sex',
+    );
+
 =head2 Limitations
 
 This module was born out of a need I had while creating
@@ -147,14 +160,16 @@ method most_recent_common_ancestor {
   my ($person1, $person2) = @_;
 
   # Are they the same person?
-  return $person1 if $person1->id eq $person2->id;
+  return $person1
+    if $person1->$identifier_field_name eq $person2->$identifier_field_name;
 
   my @ancestors1 = ($person1, $self->get_ancestors($person1));
   my @ancestors2 = ($person2, $self->get_ancestors($person2));
 
   for my $anc1 (@ancestors1) {
     for my $anc2 (@ancestors2) {
-      return $anc1 if $anc1->id eq $anc2->id;
+      return $anc1
+        if $anc1->$identifier_field_name eq $anc2->$identifier_field_name;
     }
   }
 
@@ -176,7 +191,7 @@ method get_ancestors {
 
   my @ancestors = ();
 
-  while (defined ($person = $person->parent)) {
+  while (defined ($person = $person->$parent_field_name)) {
     push @ancestors, $person;
   }
 
@@ -197,11 +212,11 @@ method get_relationship {
 
   my $rel;
 
-  if (defined $relationship_table->{$person1->gender}[$x][$y]) {
-    $rel = $relationship_table->{$person1->gender}[$x][$y];
+  if (defined $relationship_table->{$person1->$gender_field_name}[$x][$y]) {
+    $rel = $relationship_table->{$person1->$gender_field_name}[$x][$y];
   } else {
-    $rel = $relationship_table->{$person1->gender}[$x][$y] =
-      ucfirst $self->make_rel($person1->gender, $x, $y);
+    $rel = $relationship_table->{$person1->$gender_field_name}[$x][$y] =
+      ucfirst $self->make_rel($person1->$gender_field_name, $x, $y);
   }
 
   $rel = $self->abbr_rel($rel) if $abbr;
@@ -317,14 +332,17 @@ method get_relationship_coords {
   my ($person1, $person2) = @_;
 
   # If the two people are the same person, then return (0, 0).
-  return (0, 0) if $person1->id eq $person2->id;
+  return (0, 0)
+    if $person1->$identifier_field_name eq $person2->$identifier_field_name;
 
   my @ancestors1 = ($person1, $self->get_ancestors($person1));
   my @ancestors2 = ($person2, $self->get_ancestors($person2));
 
   for my $i (0 .. $#ancestors1) {
     for my $j (0 .. $#ancestors2) {
-      return ($i, $j) if $ancestors1[$i]->id eq $ancestors2[$j]->id;
+      return ($i, $j)
+        if $ancestors1[$i]->$identifier_field_name
+          eq $ancestors2[$j]->$identifier_field_name;
     }
   }
 
@@ -353,12 +371,12 @@ method get_relationship_ancestors {
 
   for ($person1, $self->get_ancestors($person1)) {
     push @ancestors1, $_;
-    last if $_->id eq $mrca->id;
+    last if $_->$identifier_field_name eq $mrca->$identifier_field_name;
   }
 
   for ($person2, $self->get_ancestors($person2)) {
     push @ancestors2, $_;
-    last if $_->id eq $mrca->id;
+    last if $_->$identifier_field_name eq $mrca->$identifier_field_name;
   }
 
   return [ \@ancestors1, \@ancestors2 ];
