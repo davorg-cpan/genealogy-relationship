@@ -26,6 +26,20 @@ Genealogy::Relationship - calculate the relationship between two people
     say $rel->get_relationship($father, $cousin);  # Uncle
     say $rel->get_relationship($cousin, $father);  # Niece
 
+If your person objects use different method names, pass the custom names
+to the constructor:
+
+    use Genealogy::Relationship;
+    use MyPerson; # Class using non-default method names
+
+    my $rel = Genealogy::Relationship->new(
+      parent_field_name     => 'progenitor',
+      identifier_field_name => 'person_id',
+      gender_field_name     => 'sex',
+    );
+
+    say $rel->get_relationship($me, $grandfather); # Grandson
+
 =head1 DESCRIPTION
 
 This module makes it easy to calculate the relationship between two people.
@@ -57,16 +71,10 @@ the character 'm' or 'f'.
 
 =head2 Note
 
-THe objects that you use with this class can actually have different names
+The objects that you use with this class can actually have different names
 for these methods. C<parent>, C<id> and C<gender> are the default names
 used by this module, but you can change them by passing the correct names
-to the constructor. For example:
-
-    my $rel = Genealogy::Relationship->new(
-      parent_field_name     => 'progenitor',
-      identifier_field_name => 'person_id',
-      gender_field_name     => 'sex',
-    );
+to the constructor. See L</Constructor> for details.
 
 =head2 Limitations
 
@@ -90,15 +98,35 @@ how to fix it as soon as possible.
 
 =head2 Constructor
 
-The constructor for this class takes one optional attribute called `abbr`.
-The default value for this attribute is 2. When set, strings of repeated
-"great"s in a relationship description will collapsed to "$n x great".
+The constructor accepts the following optional attributes:
 
-For example, if the description you have is "Great, great, great
-grandfather", then that will be abbreviated to to "3 x great grandfather".
+=over 4
 
-The value for `abbr` is the maximum number of repetitions that will be left
-untouched. You can turn abbreviations off by setting `abbr` to zero.
+=item * C<parent_field_name>
+
+The name of the method on your person objects that returns the parent of
+that person. Defaults to C<parent>.
+
+=item * C<identifier_field_name>
+
+The name of the method on your person objects that returns a unique
+identifier for that person. The identifier can be a string or a number.
+Defaults to C<id>.
+
+=item * C<gender_field_name>
+
+The name of the method on your person objects that returns the gender of
+that person (C<'m'> or C<'f'>). Defaults to C<gender>.
+
+=item * C<abbr>
+
+When set, strings of repeated "great"s in a relationship description will
+be collapsed to "$n x great". For example, "Great, great, great grandfather"
+becomes "3 x great grandfather". The value is the maximum number of
+repetitions that will be left untouched. Defaults to 2. Set to zero to
+disable abbreviation entirely.
+
+=back
 
 =head2 Caching
 
@@ -150,6 +178,30 @@ field $abbr :param = 3;
 =head1 Methods
 
 The following methods are defined.
+
+=head2 parent_field_name
+
+Returns the name of the method used to get a person's parent.
+
+=cut
+
+method parent_field_name { return $parent_field_name }
+
+=head2 identifier_field_name
+
+Returns the name of the method used to get a person's unique identifier.
+
+=cut
+
+method identifier_field_name { return $identifier_field_name }
+
+=head2 gender_field_name
+
+Returns the name of the method used to get a person's gender.
+
+=cut
+
+method gender_field_name { return $gender_field_name }
 
 =head2 most_recent_common_ancestor
 

@@ -122,4 +122,25 @@ is($rels->[0][0]->person_id, $father->person_id, 'Father is first');
 is($rels->[0][-1]->person_id, $mrca->person_id, 'MRCA is last');
 is($rels->[1][0]->person_id, $cousin->person_id, 'Cousin is first');
 is($rels->[1][-1]->person_id, $mrca->person_id, 'MRCA is last');
+
+can_ok($rel, 'parent_field_name');
+is($rel->parent_field_name, 'progenitor',
+  'parent_field_name returns the configured value');
+
+can_ok($rel, 'identifier_field_name');
+is($rel->identifier_field_name, 'person_id',
+  'identifier_field_name returns the configured value');
+
+can_ok($rel, 'gender_field_name');
+is($rel->gender_field_name, 'sex',
+  'gender_field_name returns the configured value');
+
+my $rel_defaults = Genealogy::Relationship->new;
+is($rel_defaults->parent_field_name, 'parent',
+  'parent_field_name defaults to "parent"');
+is($rel_defaults->identifier_field_name, 'id',
+  'identifier_field_name defaults to "id"');
+is($rel_defaults->gender_field_name, 'gender',
+  'gender_field_name defaults to "gender"');
+
 done_testing;
