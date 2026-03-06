@@ -111,9 +111,9 @@ consider putting a caching layer in front of C<get_relationship>.
 
 =cut
 
-use v5.38;
-use feature 'class';
-no warnings 'experimental::class';
+use strict;
+use warnings;
+use Feature::Compat::Class;
 
 class Genealogy::Relationship;
 
