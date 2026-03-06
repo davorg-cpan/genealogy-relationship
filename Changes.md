@@ -1,8 +1,11 @@
 # Change Log
 
-## Unreleased
+## [2.0.0 - 2026-03-06]
 
-- Switch to use Feature::Compat::Class
+### Changed
+
+- The module now uses `Feature::Compat::Class` to provide better compatibility
+  across different Perl versions while retaining the modern `class` syntax
 
 ## [1.0.2 - 2025-07-07]
 
