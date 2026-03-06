@@ -62,18 +62,16 @@ the character 'm' or 'f'.
 =head2 Note
 
 THe objects that you use with this class can actually have different names
-for these methods. C<parent>, C<id> and C<gender> are the default names
-used by this module, but you can change them by passing the correct names
+for these methods. C<parent>, C<parents>, C<id> and C<gender> are the default
+names used by this module, but you can change them by passing the correct names
 to the constructor. For example:
 
     my $rel = Genealogy::Relationship->new(
       parent_field_name     => 'progenitor',
+      parents_field_name    => 'progenitors',
       identifier_field_name => 'person_id',
       gender_field_name     => 'sex',
     );
-
-The C<parents_field_name> option is not configurable; the module always looks
-for a method named C<parents> when checking for two-parent support.
 
 =head2 Limitations
 
@@ -117,6 +115,7 @@ use Lingua::EN::Numbers qw[num2en num2en_ordinal];
 our $VERSION = '1.0.2';
 
 field $parent_field_name :param = 'parent';
+field $parents_field_name :param = 'parents';
 field $identifier_field_name :param = 'id';
 field $gender_field_name :param = 'gender';
 
@@ -184,16 +183,16 @@ method most_recent_common_ancestor {
 =head2 _get_parents
 
 Internal method. Given a person object, returns a list of that person's
-parents. Uses the C<parents()> method if available; otherwise falls back
-to the configured C<parent_field_name> method.
+parents. Uses the C<parents_field_name> method if the person object supports
+it; otherwise falls back to the configured C<parent_field_name> method.
 
 =cut
 
 method _get_parents {
   my ($person) = @_;
 
-  if ($person->can('parents')) {
-    return @{ $person->parents() };
+  if ($person->can($parents_field_name)) {
+    return @{ $person->$parents_field_name() };
   }
 
   my $parent = $person->$parent_field_name;
