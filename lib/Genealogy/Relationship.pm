@@ -15,7 +15,7 @@ Genealogy::Relationship - calculate the relationship between two people
     my $aunt        = Person->new( ... );
     my $cousin      = Person->new( ... );
 
-    my $common_ancestor = $rel->get_most_recent_common_ancestor(
+    my $common_ancestor = $rel->most_recent_common_ancestor(
       $me, $cousin,
     );
     say $common_ancestor->name; # Grandfather's name
@@ -500,7 +500,7 @@ perl(1)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2018-2023, Magnum Solutions Ltd.  All Rights Reserved.
+Copyright (C) 2018-2026, Magnum Solutions Ltd.  All Rights Reserved.
 
 This script is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
