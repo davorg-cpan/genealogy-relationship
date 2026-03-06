@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+
+- Switch to use Feature::Compat::Class
+
 ## [1.0.2 - 2025-07-07]
 
 - Added: use v5.38
